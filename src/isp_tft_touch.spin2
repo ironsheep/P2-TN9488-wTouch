@@ -1,0 +1,161 @@
+'' =================================================================================================
+''
+''   File....... isp_tft_touch.spin2
+''   Purpose.... Driver for the touch side of the 3.5" ILI9488 TFT Module w/resistive touch
+''   Authors.... Stephen M Moraco
+''               -- Copyright(c) 2025 Iron Sheep Productions, LLC
+''               -- see below for terms of use
+''   E-mail..... stephen@ironsheep.biz
+''   Started.... Mar 2025
+''   Updated.... 22 Mar 2025
+''
+'' =================================================================================================
+
+CON { Public Interface Constants }
+
+    '  ID where the P2 Eval Click Adapter for eInk Click is plugged in (Enum)
+    ' (Names of supported PinGroups)
+    #0[16], PINS_P0_P15, PINS_P16_P31, PINS_P32_P47
+    ' return value when user makes bad choice
+    INVALID_PIN_BASE = -1
+
+    ' Rotation constants so user can select a rotation (Enum)
+    ' NOTE: both ROTATE_* or PORTRAIT/LANDSCAPE enums work
+    #$60, ROTATE_0, ROTATE_90, ROTATE_180, ROTATE_270
+
+OBJ { Objects / constants included by this object }
+
+    spi         : "jm_ez_spi"                   '   smart pin mode 0 spi coms
+
+CON { Click Module Pin Offsets }
+ {
+    P2 Eval Click Adapter IO Assignments
+    * - used by eInk Click module w/display(3.3v only)
+
+               ┌─────────────────────────────┐
+    Base + 06  │() AN                 D/C(*) │  Base + 05
+               │                             │
+    Base + 07  │(*) RST               BSY(*) │  Base + 04
+               │                             │
+    Base + 08  │(*) CS              <-- RX() │  Base + 03(marked TX on Click modules)
+               │                             │
+    Base + 09  │(*) SCK  <--        --> TX() │  Base + 02(marked RX on Click modules)
+               │                             │
+    Base + 10  │(*) MISO -->       --> SCL() │  Base + 01
+               │                             │
+    Base + 11  │(*) MOSI <--       <-> SDA() │  Base + 00
+               │                             │
+               │(*) 3v3                5v0() │
+               │                             │
+               │(*) GND               GND(*) │
+               └─────────────────────────────/
+}
+
+    ' specs for Click eInk board
+    CLICK_OFST_MOSI = 11     ' Mikroe pin 6  - SPI Data - Out
+    CLICK_OFST_MISO = 10     ' Mikroe pin 5  - SPI Data - In
+    CLICK_OFST_SCK = 9       ' Mikroe pin 4  - SPI Clock - Out
+    CLICK_OFST_CS = 8        ' Mikroe pin 3  - SPI Chip Select - Out
+    CLICK_OFST_RST = 7       ' Mikroe pin 2  - Reset - Out
+    CLICK_OFST_AN = 6        ' Mikroe pin 1  - ??? - In
+    CLICK_OFST_PWM = 5       ' Mikroe pin 16 - ??? - Out
+    CLICK_OFST_INT = 4       ' Mikroe pin 15 - Interrupt - In
+    CLICK_OFST_RX = 3       ' N/C  Mikroe pin 14
+    CLICK_OFST_TX = 2       ' N/C  Mikroe pin 13
+    CLICK_OFST_SCL = 1      ' N/C  Mikroe pin 12
+    CLICK_OFST_SDA = 0      ' N/C  Mikroe pin 11
+
+    PIN_NOT_USED = -1
+
+    ' The XPT2046 requires a lower SPI clock rate of 2.5MHz so we define that here:
+    TOUCH_SPI_CLK_MHZ =  2500000
+
+CON { PRIVATE eInk Constants }
+
+PUB null()
+
+'' This is not a top-level object
+
+VAR { PRIVATE tn9488 Touch Variables }
+
+  LONG panelRotation    ' valid ROTATE_* value
+  LONG basePin          ' valid PINS_* value
+  LONG tchPinSDI
+  LONG tchPinSDO
+  LONG tchPinSCLK
+
+PUB start(eRotation, eClickBasePin) : ok | legalBase
+'' Specify the touch panel rotation and the eval board connect location for the click adapter and start SPI
+''
+'' @param eRotation - rotation of the touch display
+'' @param eClickBasePin - pin-group enum value
+'' @returns ok - return -1 or COG ID where -1 means invalid pin or rotation
+
+' Local Variables:
+' @local legalBase - temporary storage for legal base pin
+''
+    ok := -1
+    panelRotation := validRotation(eRotation)
+    legalBase := validPins(eClickBasePin)
+    debug("  -- now:[", udec_(panelRotation), ", ", udec_(legalBase), "]")
+    if legalBase <> INVALID_PIN_BASE
+        basePin := legalBase
+        tchPinSDI := basePin + CLICK_OFST_RX
+        tchPinSDO := basePin + CLICK_OFST_TX
+        tchPinSCLK := basePin + CLICK_OFST_SCL
+        ' start the smart pins                            ' select eInk Click
+        ok := spi.start(tchPinSDI, tchPinSDO, tchPinSCLK, TOUCH_SPI_CLK_MHZ)                     ' spi to eInk @ 3MHz(can run at 20MHz)
+
+PUB stop()
+'' Stop the tn9488 Touch SPI Object
+''
+    spi.stop()
+
+PRI validPins(eClickBasePin) : legalBase
+'' Check if the base pin is a valid pin group
+    legalBase := eClickBasePin
+    case eClickBasePin
+        PINS_P0_P15:
+        PINS_P16_P31:
+        PINS_P32_P47:
+        OTHER:
+            legalBase := INVALID_PIN_BASE
+
+PRI validRotation(eRotation) : legalRotation
+' Check if the rotation is a valid rotation
+    legalRotation := eRotation
+    case eRotation
+        ROTATE_0:
+        ROTATE_90:
+        ROTATE_180:
+        ROTATE_270:
+        OTHER:
+            legalRotation := ROTATE_0
+
+CON { license }
+{{
+
+ -------------------------------------------------------------------------------------------------
+  MIT License
+
+  Copyright(c) 2025 Iron Sheep Productions, LLC
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files(the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+ =================================================================================================
+}}

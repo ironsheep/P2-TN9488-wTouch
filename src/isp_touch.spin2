@@ -1,0 +1,81 @@
+'' =================================================================================================
+''
+''   File....... isp_touch.spin2
+''   Purpose.... General Touch Display Handler
+''   Authors.... Stephen M Moraco
+''               -- Copyright(c) 2025 Iron Sheep Productions, LLC
+''               -- see below for terms of use
+''   E-mail..... stephen@ironsheep.biz
+''   Started.... Mar 2025
+''   Updated.... 22 Mar 2025
+''
+'' =================================================================================================
+
+CON { Public Interface Constants }
+
+    '  Forward Underlying Names of supported PinGroups
+    PINS_P0_P15 = tnTouch.PINS_P0_P15
+    PINS_P16_P31 = tnDisplay.PINS_P16_P31
+    PINS_P32_P47 = tnDisplay.PINS_P32_P47
+
+    '  Forward Underlying Name for invalid pin base
+    INVALID_PIN_BASE = tnDisplay.INVALID_PIN_BASE
+
+    '  Forward Underlying Names of supported Rotations
+    ROTATE_0 =tnDisplay.ROTATE_0
+    ROTATE_90 = tnDisplay.ROTATE_90
+    ROTATE_180 = tnDisplay.ROTATE_180
+    ROTATE_270 = tnDisplay.ROTATE_270
+
+
+OBJ { Objects / constants included by this object }
+
+    tnDisplay   : "isp_tn9488"              ' smart pin mode 0 spi coms for display
+    tnTouch     : "isp_tft_touch"           ' smart pin mode 0 spi coms for touch
+
+
+CON { PRIVATE eInk Constants }
+
+PUB null()
+
+'' This is not a top-level object
+
+PUB start(eRotation, eClickBasePin) : ok | legalBase
+'' Specify the touch panel rotation and the eval board connect location for the click adapter and start SPI
+''
+'' @param eRotation - rotation of the touch display
+'' @param eClickBasePin - pin-group enum value
+'' @returns ok - return -1 or COG ID where -1 means invalid pin or rotation
+    ok := tnDisplay.start(eRotation, eClickBasePin)
+    if(ok <> -1)
+        ok := tnTouch.start(eRotation, eClickBasePin)
+    else
+        tnDisplay.stop()
+
+CON { license }
+{{
+
+ -------------------------------------------------------------------------------------------------
+  MIT License
+
+  Copyright(c) 2025 Iron Sheep Productions, LLC
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files(the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+ =================================================================================================
+}}
