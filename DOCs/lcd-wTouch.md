@@ -37,36 +37,51 @@ Additional pages:
 
 When using the TN9488 w/Touch, you wire the pins directly to the P2 Eval Click Adapter.  This allows us to route the touch signals to the same adapter board so the entire display with touch consumes just the P2 Eval. Header pair.
 
-Here's the display pinout:
+### Here's the Module pinout:
 
 <p align="center">
   <img src="../Images/pins-IF.jpg" width="100"></br>
-  <caption><B>Mapping the eInk signals and the Touch signals to the Click Adapter</B></caption>
+  <caption><B>TFT Module signal names</B></caption>
 </p>
 
-**NOTE:** we connect our **eInk-display** to the SPI-signals-side of the adapter ("eInk" on left) and the connect **Touch** to the I2C-signals-side of the adapter ("touch" on the right.)
+
+### The Author's display wiring:
+
+<p align="center">
+  <img src="../Images/displayPins.jpg" width="200"></br>
+  <caption><B>Connections for Display SPI</B></caption>
+</p>
+
+### The Author's touch wiring:
+
+<p align="center">
+  <img src="../Images/touchPins.jpg" width="200"></br>
+  <caption><B>Connections for Touch SPI +BackLight</B></caption>
+</p>
+
+**NOTE:** we connect our **TFT-display** to the SPI-signals-side of the adapter and then connect **Touch** to the I2C-signals-side of the adapter.
 
 
 Detailed list of the connections:
 
-| Signal Name  (J2) |  Wire Color | Adapter Pin 
+| Signal Name  (J2) |  Author's Wire Color | Adapter Pin 
 | --- | --- | --- 
 | | ** **Display Signals**  ** | 
 | VDD |  Red | +3.3v 
 | GND |  Black | GND 
-| CS |  Orange | CS
-| RST |  Grey | RST 
-| D/C |  Violet | AN
-| SDI |  Green | MISO
-| SCK |  Yellow | SCK
-| BL |  Blue | PWM*
-| SDO |  Blue | MOSI
+| CS |  Blue | CS
+| RST |  Violet | RST 
+| D/C |  Gray | AN
+| SDI |  Yellow | MISO
+| SCK |  Green | SCK
+| BL | Brown | PWM*
+| SDO |  Orange | MOSI
 | | ** **Touch Signals** ** | 
-| TCK |  Grey | SCL
+| TCK |  Blue | SCL
 | TCS |  Violet | SDA 
 | TDI |  Yellow | RX
-| TDO |  Orange | TX 
-| PEN (INT) |  Green | INT 
+| TDO |  Green | TX 
+| PEN (INT) |  Orange | INT 
 
 **NOTE:** A single signal **BL** (backlight) is routed to the other size of the click I/F adapter board to **PWM**.  This is the side where we use the Serial and I2C pins for the TOuch SPI interface.
 
