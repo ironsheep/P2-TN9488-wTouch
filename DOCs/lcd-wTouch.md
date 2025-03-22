@@ -50,7 +50,7 @@ Here's the display pinout:
 Detailed list of the connections:
 
 | Signal Name  (J2) |  Wire Color | Adapter Pin 
-| --- | --- | ---  | --- 
+| --- | --- | --- 
 | | ** **Display Signals**  ** | 
 | VDD |  Red | +3.3v 
 | GND |  Black | GND 
