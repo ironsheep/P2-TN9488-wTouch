@@ -90,7 +90,7 @@ When using the TN9488 w/Touch, you wire the pins directly to the P2 Eval Click A
 | TDO |  Green | TX 
 | PEN (INT) |  Orange | INT 
 
-**NOTE:** A single signal **BL** (backlight) is routed to the other size of the click I/F adapter board to **PWM**.  This is the side where we use the Serial and I2C pins for the TOuch SPI interface.
+**NOTE:** A single signal **BL** (backlight) is routed to the other size of the click I/F adapter board to **PWM**.  This is the side where we use the Serial and I2C pins for the Touch SPI interface.
 
 ---
 
