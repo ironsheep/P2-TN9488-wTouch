@@ -44,15 +44,22 @@ When using the TN9488 w/Touch, you wire the pins directly to the P2 Eval Click A
   <caption><B>TFT Module signal names</B></caption>
 </p>
 
+### Here's how we map to the click adapter:
 
-### The Author's display wiring:
+<p align="center">
+  <img src="../Images/p2-click-adapter.png" width="400"></br>
+  <caption><B>Mapping Module signal names to click adapter</B></caption>
+</p>
+
+
+### The Author's click adapter display wiring:
 
 <p align="center">
   <img src="../Images/displayPins.jpg" width="200"></br>
   <caption><B>Connections for Display SPI</B></caption>
 </p>
 
-### The Author's touch wiring:
+### The Author's click adapter touch wiring:
 
 <p align="center">
   <img src="../Images/touchPins.jpg" width="200"></br>
@@ -62,7 +69,7 @@ When using the TN9488 w/Touch, you wire the pins directly to the P2 Eval Click A
 **NOTE:** we connect our **TFT-display** to the SPI-signals-side of the adapter and then connect **Touch** to the I2C-signals-side of the adapter.
 
 
-Detailed list of the connections:
+### Detailed list of the connections:
 
 | Signal Name  (J2) |  Author's Wire Color | Adapter Pin 
 | --- | --- | --- 
