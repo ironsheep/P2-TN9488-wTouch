@@ -1,0 +1,34 @@
+#!/bin/bash
+
+DBXPATH=/Users/stephen/Library/CloudStorage/Dropbox/PropV2-Shared/Projects/P2-TN9488-wTouchSW
+SRCPATH=src
+# Check for file-changes in Dropbox vs. git repo
+
+foundDiff=0
+for FILSPEC in $DBXPATH/*.spin2; do
+    #echo $FILSPEC
+    # Skip files with "RLS" in their name
+    if [[ $FILSPEC == *RLS* || $FILSPEC == *MINE* ]]; then
+        continue
+    fi
+
+    FIL=`basename $FILSPEC`
+    LEFT=`md5 -r $SRCPATH/$FIL | cut -f1 -d' '`
+    cd $DBXPATH 2>/dev/null 1>&2
+    RIGHT=`md5 -r $FIL | cut -f1 -d' '`
+    cd - 2>/dev/null 1>&2
+
+    if [ "$LEFT" != "$RIGHT" ]; then
+        foundDiff=1
+        #echo "cp -p $DBXPATH/$FIL $SRCPATH/$FIL"
+        (set -x; cp -p $DBXPATH/$FIL $SRCPATH/$FIL)
+    fi
+
+done
+
+# Echo a message if foundDiff is zero
+if [ $foundDiff -ne 1 ]; then
+    echo " NO files different, none copied!"
+fi
+
+echo "Done"
