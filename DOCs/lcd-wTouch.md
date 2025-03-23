@@ -71,24 +71,24 @@ When using the TN9488 w/Touch, you wire the pins directly to the P2 Eval Click A
 
 ### Detailed list of the connections:
 
-| Signal Name  (J2) |  Author's Wire Color | Adapter Pin | Author's LA Pin
-| --- | --- | --- | --- 
+| Signal Name  (J2) |  Author's Wire Color | Adapter Pin | Author's LA Pin | Author's P2 Pin
+| --- | --- | --- | --- | --- 
 | | ** **Display Signals**  ** | 
 | VDD |  Red | +3.3v  | 
 | GND |  Black | GND  | 
-| CS |  Blue | CS | 2
-| RST |  Violet | RST  | 1
-| D/C |  Gray | AN | 0
-| SDI |  Yellow | MISO | 4
-| SCK |  Green | SCK | 3
-| BL | Brown | PWM* | 6
-| SDO |  Orange | MOSI | 5
+| CS |  Blue | CS | 2 | 40
+| RST |  Violet | RST  | 1 | 39
+| D/C |  Gray | AN | 0 | 38
+| SDI |  Yellow | MISO | 4 | 42
+| SCK |  Green | SCK | 3 | 41
+| BL | Brown | PWM* | 6 | 37
+| SDO |  Orange | MOSI | 5 | 43
 | | ** **Touch Signals** ** | 
-| TCK |  Blue | SCL | 10
-| TCS |  Violet | SDA  | 11
-| TDI |  Yellow | RX | 8
-| TDO |  Green | TX  | 9
-| PEN (INT) |  Orange | INT  | 7
+| TCK |  Blue | SCL | 10 | 33
+| TCS |  Violet | SDA  | 11 | 32
+| TDI |  Yellow | RX | 8 | 35
+| TDO |  Green | TX  | 9 | 34
+| PEN (INT) |  Orange | INT  | 7 | 36
 
 **NOTE:** A single signal **BL** (backlight) is routed to the other size of the click I/F adapter board to **PWM**.  This is the side where we use the Serial and I2C pins for the Touch SPI interface.
 
